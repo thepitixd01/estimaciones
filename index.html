@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Estimaciones</title>
+    <link rel="icon" type="image/png" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAjRVqcqxiDdk3l4UkA5eR6PpAvCxbJUsgzg&s" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+        }
+        body {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-weight: 300;
+            background-color: #F5E6E8;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+             margin: 20px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+         h1 {
+            text-align: center;
+            margin-bottom: 15px;
+             color: #29104a;
+           text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.05);
+        }
+        h3 {
+             color: #29104a;
+            margin-top: 20px;
+         }
+        h5 {
+            color: #29104a;
+             margin-bottom: 10px;
+         }
+         p {
+             margin-bottom: 12px;
+            opacity: 0;
+            transform: translateY(10px);
+             animation: slideIn 0.4s ease-out forwards;
+             animation-delay: 0.2s;
+        }
+         @keyframes slideIn {
+            to {
+                 opacity: 1;
+                transform: translateY(0);
+             }
+        }
+        .input-group {
+             margin-bottom: 12px;
+        }
+        .input {
+            height: 36px;
+           border-radius: 7px;
+            border: 1px solid #ddd;
+             padding: 8px;
+           width: 100%;
+           transition: border-color 0.3s ease;
+         }
+         .input:focus {
+             border-color: #9ac8ff;
+           outline: none;
+            box-shadow: 0 0 5px rgba(154, 200, 255, 0.5);
+        }
+        .button, .button2, #calcularBtn, .section-btn {
+            height: 36px;
+             padding: 8px 16px;
+           border: none;
+            border-radius: 15px;
+            cursor: pointer;
+             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+           font-size: 15px;
+             transition: background-color 0.3s ease, transform 0.2s ease;
+           margin-bottom: 12px;
+         }
+         .button {
+            background-color: #CBB3BF;
+         }
+        .button:hover {
+           background-color: #EF959C;
+             transform: scale(1.02);
+         }
+        .button2 {
+           background-color: #9ac8ff;
+        }
+        #calcularBtn {
+            background-color: #CBB3BF;
+         }
+         #calcularBtn:hover, .button2:hover {
+            background-color: #EF959C;
+            transform: scale(1.02);
+         }
+        .section-btn {
+            background-color: #ddd;
+            color: #333;
+             margin-top: 5px;
+         }
+        .section-btn:hover {
+             background-color: #ccc;
+        }
+        #result {
+            margin-top: 15px;
+             padding: 12px;
+            border: 1px solid #ddd;
+             border-radius: 8px;
+            background-color: #f9f9f9;
+           opacity: 0;
+             transform: translateY(10px);
+            animation: slideIn 0.4s ease-out forwards;
+           animation-delay: 0.2s;
+        }
+          #result p{
+             opacity: 1;
+             transform: translateY(0);
+             animation: none;
+         }
+         .hidden {
+            display: none;
+          }
+         #progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            height: 7px;
+           border-radius: 5px;
+             margin-top: 15px;
+            margin-bottom: 15px;
+
+        }
+        #progress {
+             height: 100%;
+            width: 0;
+            background-color: #4caf50;
+           border-radius: 5px;
+            transition: width 0.4s ease;
+        }
+        .error {
+             color: #e74c3c;
+             font-size: 14px;
+            margin-top: 3px;
+            text-align: center;
+         }
+        #listaDatos {
+            list-style-type: none;
+            padding: 0;
+        }
+        #listaDatos li {
+             margin-bottom: 4px;
+             opacity: 0;
+            transform: translateX(-20px);
+             animation: slideInList 0.3s ease forwards;
+        }
+        @keyframes slideInList {
+             to {
+                opacity: 1;
+               transform: translateX(0);
+           }
+        }
+        .footer {
+            background-color: #544963;
+            text-align: center;
+            padding: 10px 0;
+            color: #fff;
+           margin-top: auto;
+         }
+        .text {
+            color: #ffffff;
+            display: inline-block;
+        }
+           .info-box {
+            background-color: #f0f0f0;
+             border-left: 5px solid #CBB3BF;
+            padding: 15px;
+             border-radius: 5px;
+           margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(10px);
+             animation: slideIn 0.4s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+        .info-box p {
+            margin-bottom: 0;
+            opacity: 1;
+             transform: translateY(0);
+             animation: none;
+
+         }
+        .section-title {
+           text-align: center;
+            margin-bottom: 10px;
+            color: #29104a;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.05);
+         }
+         .theory-section, .practice-section {
+            margin-bottom: 30px;
+           transition: all 0.5s ease-in-out;
+        }
+        .section-content{
+             display: none;
+            margin-top: 10px;
+         }
+         .section-content.active{
+            display: block;
+         }
+        .section-btn.active{
+            background-color: #bbb;
+         }
+          /* Media Queries para móviles */
+        @media (max-width: 768px) {
+           .container {
+                margin: 10px auto;
+                padding: 10px; /* Reduce padding */
+           }
+            h1 {
+                 font-size: 1.8em; /* Reduce el tamaño de la fuente */
+            }
+             h3 {
+                font-size: 1.2em;
+            }
+            h5{
+                font-size: 1em;
+            }
+            p{
+                font-size: 0.9em;
+            }
+           .input{
+               height: 30px;
+               font-size: 0.9em;
+
+           }
+
+             .button, .button2, #calcularBtn, .section-btn {
+                 height: 30px;
+               font-size: 1em;
+                 padding: 5px 10px; /* Reduce padding */
+            }
+          .info-box{
+               padding: 10px;
+
+           }
+            .section-title{
+                font-size: 1.5em;
+            }
+         }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="section-title"><strong>Estimaciones</strong></h1>
+        <button class="section-btn active" onclick="showSection('theory')">Teoría</button>
+        <button class="section-btn" onclick="showSection('practice')">Práctica</button>
+
+        <div id="theory" class="section-content active">
+             <div class="info-box">
+                <p>
+                    <strong>Estimación Puntual:</strong> Usa un valor único para estimar un parámetro desconocido, como el tiempo promedio de carga de una página web.
+                </p>
+           </div>
+            <div class="info-box">
+                 <p>
+                   <strong>Estimación de Intervalo de Confianza:</strong> Proporciona un rango donde es probable que se encuentre el verdadero valor del parámetro, como el tiempo de compilación de un proyecto.
+                </p>
+            </div>
+             <p>
+                 <strong>Estimación Puntual:</strong> La estimación puntual se refiere al proceso de usar una única cifra o "punto" como una estimación de un parámetro desconocido en una población. Es decir, se utiliza una muestra para calcular un valor que se considera una buena aproximación del valor verdadero del parámetro en toda la población.
+             </p>
+              <p>
+                 <strong>Estimación Puntual:</strong>  Este es un ejercicio interactivo acerca de la Estimación Puntual. Imagina que eres un desarrollador de una página web y
+                 estás tratando de mejorar el rendimiento de la misma. Quieres estimar el tiempo promedio que le toma a los usuarios cargar
+                 la página web, sin embargo, no tienes acceso a todos los tiempos de carga posibles, por lo que decides realizar una muestra. <br>
+                 Tu objetivo es estimar el tiempo promedio de carga de la página web para todos los usuarios. Para hacerlo, necesitas tomar una
+                muestra de los tiempos de carga de la página y luego calcular la estimación puntual
+                 de tiempos de carga de la página.
+            </p>
+             <p>
+                <strong>Estimación Puntual:</strong>  Debes ingresar en los campos disponibles el tiempo de carga que le toma a cada persona entrar a la página web. Puede ser cualquier número inventado (entre enteros o decimales) o preguntarle a cinco personas cercanas cuánto tiempo le toma ingresar a esta misma página web y tomarle el tiempo. <br>
+                 Los valores ingresados son una muestra representativa del comportamiento de la página web para un grupo de usuarios. De aquí, vamos a estimar el tiempo promedio de carga para todos los usuarios.
+             </p>
+             <p>
+                <strong>Estimación Puntual:</strong> El promedio es una medida estadística comúnmente utilizada para representar un valor central de un conjunto de datos. En este caso, nos interesa obtener el promedio del tiempo de carga.
+               El cálculo del promedio para una muestra de datos se realiza sumando todos los valores y luego dividiendo esa suma entre el número total de datos en la muestra (en este caso se suman todos los valores ingresados y luego se divide entre 5).
+             </p>
+              <p>
+                <strong>Estimación de Intervalos:</strong>  La estimación de intervalos es un concepto que se usa cuando se quiere aproximar un valor dentro de un rango, en lugar de un valor exacto.
+                 Es útil cuando se tiene tiene incertidumbre o cuando los datos no son completamente precisos.
+             </p>
+             <p>
+                <strong>Estimación de Intervalos:</strong>   Al igual que el ejercicio anterior sobre la Estimación Puntual, este ejercicio será interactivo de igual forma, por lo que tendrá que facilitar
+                los datos que son necesarios para completar la prueba y así generar los resultados.
+                Imagina que estás midiendo el tiempo de compilación de un proyecto en un servidor y quieres estimar el tiempo promedio
+                 que toma compilar el proyecto bajo ciertas condiciones de carga. Hay una casilla donde puede ingresar la cantidad de números
+                de mediciones de los tiempos de compilación (en segundos, es necesario ingresar un mínimo de tres números para realizar la operación, además de poder ingresar más de cinco
+                  o la cantidad facilitada para completar el ejercicio), la cantidad de números ingresados servirán como muestra para este ejercicio.
+            </p>
+             <p>
+                <strong>Estimación de Intervalos:</strong> Vamos a calcular el intervalo de confianza. Hay un total de 7 tiempos de compilación (7, 6, 9, 12, 4, 8, 10). Ingresa los tiempos de compilación uno a uno.
+             </p>
+             <p>
+                 <strong>Estimación de Intervalos:</strong>  Se generará el resultado de este ejercicio una vez ingrese el número de tiempos totales facilitadas, al igual que con cualquier número de tiempo totales que desee aplicar.
+               A continuación, se explicará cómo se llegó a ello: tras obtener la muestra de tiempos de compilación en segundos,
+                se calculó la media y la desviación estándar; para calcular la media se sumaron todos los números ingresados entre sí y luego se dividió
+                 entre el número de datos (n) en total; es decir, si se ingresaron los 7 tiempos facilitadas arriba, éstos se sumaron y luego se dividieron entre 7.
+            </p>
+             <p>
+                 <strong>Estimación de Intervalos:</strong> Se continúa ahora calculando la desviación estándar, donde (xi) son los valores de la muestra, (μ) es la media de la muestra y (n) es el número de datos.
+                Después de recopilar nuestros datos obtenidos hasta ahora, se le restó la media a cada valor de la muestra para así obtener las desviaciones de la media.
+                 Por consiguiente, se elevaron al cuadrado los resultados obtenidos de cada uno y luego se sumaron entre sí. La varianza es el promedio de las desviaciones
+                 al cuadrado. Como estamos trabajando con una muestra (no con toda la población de compilaciones posibles), debemos dividir entre n - 1 (es decir, 6 en este caso,
+                  ya que n = 7 si seguimos con el ejercicio con los datos facilitados desde el principio) para obtener una estimación más precisa. Esto se llama la varianza muestral.
+             </p>
+             <p>
+               <strong>Estimación de Intervalos:</strong>  Finalmente, la desviación estándar es simplemente la raíz cuadrada de la varianza. Si seguimos el ejercicio planteado, se habría tomado la raíz cuadrada de 7.
+                Una vez se tiene la desviación estándar, se utiliza para calcular el intervalo de confianza de un porcentaje dado (en nuestro caso, un intervalo de confianza del 95%).
+                 Este intervalo te da un rango dentro del cual puedes esperar que se encuentren los tiempos de compilación, basándote en la muestra de datos que se ha recogido.
+                Para el intervalo de confianza, multiplicamos la desviación estándar por un valor z (que depende del nivel de confianza que quieras: en este caso, 1.96 para un 95%).
+                Luego, sumamos y restamos este valor a la media para obtener el rango del intervalo. En el ejercicio, si la media es 8 y la desviación estándar es
+                 2.65, y tenemos 7 datos, el intervalo de confianza del 95% sería 1.96. Por lo tanto, el intervalo de confianza sería el resultado que genera el programa.
+                El intervalo de confianza del 95% para los tiempos de compilación es aproximadamente (6.04, 9.96) segundos. Esto significa que, con un 95% de certeza, los tiempos de
+                compilación de futuras muestras estarán entre esos valores.
+              </p>
+         </div>
+
+         <div id="practice" class="section-content">
+             <h3><strong>Estimación Puntual: Ingresa los tiempos de carga (en segundos)</strong></h3>
+             <p>Ingresa el tiempo que le toma a 5 personas cargar la página web:</p>
+            <div class="input-group">
+               <label for="time1">Persona 1:</label>
+                <input type="number" id="time1" class="input" placeholder="Tiempo en segundos" step="0.1">
+            </div>
+            <div class="input-group">
+                <label for="time2">Persona 2:</label>
+                <input type="number" id="time2" class="input" placeholder="Tiempo en segundos" step="0.1">
+           </div>
+             <div class="input-group">
+                <label for="time3">Persona 3:</label>
+               <input type="number" id="time3" class="input" placeholder="Tiempo en segundos" step="0.1">
+           </div>
+            <div class="input-group">
+                <label for="time4">Persona 4:</label>
+               <input type="number" id="time4" class="input" placeholder="Tiempo en segundos" step="0.1">
+           </div>
+             <div class="input-group">
+                <label for="time5">Persona 5:</label>
+                <input type="number" id="time5" class="input" placeholder="Tiempo en segundos" step="0.1">
+            </div>
+           <button class="button" onclick="calcularPromedio()">Calcular Estimación</button>
+            <div id="result" class="hidden"></div>
+             <script>
+                function calcularPromedio() {
+                   const time1 = parseFloat(document.getElementById('time1').value);
+                   const time2 = parseFloat(document.getElementById('time2').value);
+                   const time3 = parseFloat(document.getElementById('time3').value);
+                   const time4 = parseFloat(document.getElementById('time4').value);
+                    const time5 = parseFloat(document.getElementById('time5').value);
+
+                   if (isNaN(time1) || isNaN(time2) || isNaN(time3) || isNaN(time4) || isNaN(time5)) {
+                       document.getElementById('result').innerHTML = "<p>Por favor, ingresa un valor válido para todos los tiempos.</p>";
+                       document.getElementById('result').classList.remove('hidden');
+                       return;
+                   }
+
+                    const suma = time1 + time2 + time3 + time4 + time5;
+                    const promedio = suma / 5;
+
+                    document.getElementById('result').innerHTML = `<p>La estimación puntual del tiempo de carga promedio es de: <strong>${promedio.toFixed(2)} segundos</strong></p>`;
+                   document.getElementById('result').classList.remove('hidden');
+                }
+           </script>
+             <h3 class="mt-3"><strong>Estimación de Intervalo de Confianza: Ingresa los tiempos de compilación (en segundos)</strong></h3>
+             <p>Ingresa los tiempos de compilación (en segundos):</p>
+            <div class="input-group">
+                <h5 for="inputTime" class="mb-1"><strong>Ingresa un tiempo de compilación (en segundos):</strong></h5>
+                <input type="number" class="input" id="inputTime" placeholder="Ejemplo: 7" required>
+               <button class="button2 mt-2" onclick="agregarTiempo()">Agregar tiempo</button>
+            </div>
+            <h3><strong>Datos ingresados:</strong></h3>
+            <ul id="listaDatos">
+            </ul>
+            <p id="instrucciones">Ingresa al menos 3 tiempos para poder calcular.</p>
+            <p id="errorMensaje" class="error hidden"></p>
+            <div id="progress-bar" class="hidden">
+               <div id="progress"></div>
+            </div>
+            <div id="resultado" class="hidden">
+               <br>
+                <h2><strong>Resultados:</strong></h2>
+               <p id="resultadoMedia">Media: </p>
+               <p id="resultadoDesviacion">Desviación Estándar: </p>
+                <p id="intervalo">Intervalo de Confianza: </p>
+            </div>
+            <div id="botonContainer" class="mt-3"></div>
+
+           <script>
+                let tiempos = [];
+                 let paso = 0;
+
+                function agregarTiempo() {
+                   const input = document.getElementById('inputTime');
+                    const tiempo = parseFloat(input.value);
+                    const errorMensaje = document.getElementById('errorMensaje');
+
+                     if (isNaN(tiempo)) {
+                         errorMensaje.textContent = "Por favor, ingresa un número válido.";
+                        errorMensaje.classList.remove('hidden');
+                        return;
+                    }
+                     if (tiempo <= 0) {
+                        errorMensaje.textContent = "El tiempo debe ser un número positivo.";
+                        errorMensaje.classList.remove('hidden');
+                        return;
+                    }
+
+                    errorMensaje.classList.add('hidden');
+
+                    tiempos.push(tiempo);
+
+                   const listaDatos = document.getElementById('listaDatos');
+                    const li = document.createElement('li');
+                    li.textContent = `Tiempo ${tiempos.length}: ${tiempo} segundos.`;
+                     listaDatos.appendChild(li);
+
+                    input.value = '';
+
+                    if (tiempos.length >= 3) {
+                         document.getElementById('instrucciones').textContent = "¡Listo! Ahora, presiona el siguiente botón para calcular los resultados.";
+                         document.getElementById('progress-bar').classList.remove('hidden');
+                        document.getElementById('progress').style.width = "50%";
+                         if (!document.getElementById('calcularBtn')) {
+                             const button = document.createElement('button');
+                             button.id = 'calcularBtn';
+                             button.textContent = "Calcular Intervalo de Confianza";
+                             button.onclick = calcularIntervalo;
+                           document.getElementById('botonContainer').appendChild(button);
+                        }
+                   } else {
+                       document.getElementById('instrucciones').textContent = `Has ingresado ${tiempos.length} tiempos. Ingresa al menos 3 para continuar.`;
+                    }
+                }
+                  function calcularIntervalo() {
+                    const suma = tiempos.reduce((acum, tiempo) => acum + tiempo, 0);
+                     const media = suma / tiempos.length;
+                     const sumatoria = tiempos.reduce((acum, tiempo) => acum + Math.pow(tiempo - media, 2), 0);
+                     const desviacion = Math.sqrt(sumatoria / (tiempos.length - 1));
+                     const z = 1.96;
+                     const margenError = z * (desviacion / Math.sqrt(tiempos.length));
+                    const intervaloInferior = media - margenError;
+                     const intervaloSuperior = media + margenError;
+
+                    document.getElementById('resultadoMedia').textContent = `Media: ${media.toFixed(2)} segundos.`;
+                     document.getElementById('resultadoDesviacion').textContent = `Desviación Estándar: ${desviacion.toFixed(2)} segundos.`;
+                    document.getElementById('intervalo').textContent = `Intervalo de Confianza (95%): (${intervaloInferior.toFixed(2)} segundos, ${intervaloSuperior.toFixed(2)} segundos)`;
+
+                     document.getElementById('resultado').classList.remove('hidden');
+                    document.getElementById('progress').style.width = "100%";
+
+                     document.getElementById('instrucciones').textContent = "¡Todo listo! Aquí están tus resultados.";
+                }
+           </script>
+        </div>
+     </div>
+    <div class="footer">
+        <footer>
+            <label class="text mt-2">© 2025 Todos los derechos reservados</label>
+         </footer>
+     </div>
+    <script>
+        function showSection(sectionId) {
+            const theorySection = document.getElementById('theory');
+            const practiceSection = document.getElementById('practice');
+             const theoryBtn = document.querySelector('.section-btn[onclick="showSection(\'theory\')"]');
+             const practiceBtn = document.querySelector('.section-btn[onclick="showSection(\'practice\')"]');
+
+            theorySection.classList.remove('active');
+            practiceSection.classList.remove('active');
+           theoryBtn.classList.remove('active');
+           practiceBtn.classList.remove('active');
+
+
+             if (sectionId === 'theory') {
+                theorySection.classList.add('active');
+               theoryBtn.classList.add('active');
+            } else {
+               practiceSection.classList.add('active');
+                 practiceBtn.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
